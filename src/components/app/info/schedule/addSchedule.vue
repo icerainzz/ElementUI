@@ -1,5 +1,5 @@
 <template>
-	<div>addSchedule</div>
+	<div>this is addSchedule</div>
 </template>
 <script>
 	export default {
