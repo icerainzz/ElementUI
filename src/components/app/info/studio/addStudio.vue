@@ -1,5 +1,5 @@
 <template>
-	<div>addStudio</div>
+	<div>addStudio11111</div>
 </template>
 <script>
 	export default {
