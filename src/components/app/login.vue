@@ -23,8 +23,6 @@
 	}
 </script>
   -->
-
-
 <template>
 	<div class="reg">
 			<h1>用户登录</h1>
@@ -45,6 +43,8 @@
 </el-form>
 </div>
 </template>
+
+
 
 <script type="text/javascript">
 	export default {
