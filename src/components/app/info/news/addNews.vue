@@ -1,5 +1,5 @@
 <template>
-	<div>addNews</div>
+	<div>addhhhhNews51561651</div>
 </template>
 <script>
 	export default {
