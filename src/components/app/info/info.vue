@@ -47,32 +47,32 @@
 			      <el-submenu index="2">
 			        <template slot="title"><i class="el-icon-menu"></i>影院信息管理</template>
 			        <el-submenu index="2-1">
-			          <template slot="title">影院管理</template>
+			          <template slot="title">影厅管理</template>
 			         	<router-link class="link" to="/info/addTheater">
 			          		 <el-menu-item index="2-1-1">
 			          	     <i class="el-icon-circle-plus"></i>
-			         		 新增影院
+			         		 新增影厅
 			         		 </el-menu-item>
 			         	</router-link>	 
 			          	<router-link class="link" to="/info/theaterList">
 			          		 <el-menu-item index="2-1-2">
 			          			<i class="el-icon-tickets"></i>
-			         		 影院列表
+			         		 影厅列表
 			         		 </el-menu-item>
 			         	</router-link>	 
        				 </el-submenu>
        				 <el-submenu index="2-2">
-			          <template slot="title">影厅管理</template>
+			          <template slot="title">影院管理</template>
 			       		<router-link class="link" to="/info/addStudio">
 			          		 <el-menu-item index="2-2-1">
 			          	     <i class="el-icon-circle-plus"></i>
-			         		 新增影厅
+			         		 新增影院
 			         		 </el-menu-item>
 			         	</router-link>	 
 			          	<router-link class="link" to="/info/studioList">
 			          		 <el-menu-item index="2-2-2">
 			          			<i class="el-icon-tickets"></i>
-			         		 影厅列表
+			         		 影院列表
 			         		 </el-menu-item>
 			         	</router-link>	 
        				 </el-submenu>

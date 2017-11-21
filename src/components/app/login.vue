@@ -25,21 +25,26 @@
   -->
 <template>
 	<div class="reg">
-			<h1>用户登录</h1>
-	<el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
-  <el-form-item label="用户名" prop="username">
-   <el-input v-model="ruleForm2.username"></el-input>
+		<img src="../../image/486953bd63fdfb8783b2e99a17db4541.jpg" alt="" style="width: 48px;" >
+			
+	<el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" 
+	style="text-align:center" 
+	class="demo-ruleForm">
+	<h2>登录到猫眼</h2>
+  <el-form-item   prop="username" style="margin-left:0px" class="item" >
+   <el-input v-model="ruleForm2.username" placeholder="用户名"  ></el-input>
   </el-form-item>
-  <el-form-item label="密码" prop="pass">
-    <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+  <el-form-item label="" prop="pass">
+    <el-input type="password" v-model="ruleForm2.pass" auto-complete="off" placeholder="密码" ></el-input>
   </el-form-item>
-  <el-form-item label="确认密码" prop="checkPass">
-    <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
-  </el-form-item>
+  
+
   <el-form-item>
     <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
     <el-button @click="resetForm('ruleForm2')">重置</el-button>
   </el-form-item>
+  <span style="color: #878D99">注：若没有账号密码请联系管理员</span>
+
 </el-form>
 </div>
 </template>
@@ -67,15 +72,7 @@
           callback();
         }
       };
-      var validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== this.ruleForm2.pass) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
-          callback();
-        }
-      };
+     
       return {
         ruleForm2: {
           pass: '',
@@ -85,9 +82,6 @@
         rules2: {
           pass: [
             { validator: validatePass, trigger: 'blur' }
-          ],
-          checkPass: [
-            { validator: validatePass2, trigger: 'blur' }
           ],
           username: [
             { validator: checkusername, trigger: 'blur' }
@@ -99,7 +93,7 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+           this.$router.push("/info")
             console.log("aaaa")
           } else {
             console.log('error submit!!');
@@ -116,13 +110,20 @@
 
 <style type="text/css" >
 	.reg{
-		width: 500px;
-	    
+		width: 350px;
+		margin: auto;
+		text-align: center;
+		padding-top: 100px;
 	}
 
-	.reg{
-		text-align: center;
-		color: #409EFF
+	.reg h2{
+		 
+		color: #fa5555;
+		margin-left:0px; 
+	}
+
+	 .item {
+		margin-left:0px; 
 	}
 	
 </style>
