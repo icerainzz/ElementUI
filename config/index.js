@@ -35,7 +35,25 @@ module.exports = {
         target: "http://127.0.0.1:3000",
         secure: false,
         changeOrigin: true
-      }
+      },
+      "/schedules/**": {
+        //家里的
+        target: "http://192.168.1.106:3000",
+        secure: false,
+        changeOrigin: true
+      },
+      "/movies/**": {
+        //家里的
+        target: "http://192.168.1.106:3000",
+        secure: false,
+        changeOrigin: true
+      },
+       "/studios/**": {
+        //家里的
+        target: "http://192.168.1.106:3000",
+        secure: false,
+        changeOrigin: true
+      },
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
