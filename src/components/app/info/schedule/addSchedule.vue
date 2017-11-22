@@ -34,7 +34,6 @@
   </el-select>
   <div class="block">
     <el-date-picker
-      @change="con(showTime)"
       v-model="showTime"
       type="datetime"
       placeholder="选择放映时间"
@@ -52,9 +51,80 @@
   	>保存</el-button>
 	<el-button type="primary" icon="el-icon-refresh">重置</el-button>
   </div>
-  <ul>
-  	<li v-for="(item ,index) in movies" >{{item.cName}}</li>
-  </ul>
+   <el-table
+    :data="studiosByschedule"
+    border
+    style="width:100%">
+    <el-table-column
+      fixed
+      prop="name"
+      label="影院名"
+      width="150">
+    </el-table-column>
+    <el-table-column
+      prop="address"
+      label="地址"
+      width="120">
+    </el-table-column>
+    <el-table-column
+      fixed="right"
+      label="操作"
+      width="150">
+      <template slot-scope="scope">
+        <el-button @click="handleClick(scope.row)" type="text" size="small">查看影厅</el-button>
+        <el-button @click="delSchedulesInStudioByMovieId(scope.row)" type="text" size="small">下线此片</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-table
+    :data="theatersBystudio"
+    border
+    style="width:100%">
+    <el-table-column
+      fixed
+      prop="show_time"
+      label="放映时间"
+      width="150">
+    </el-table-column>
+    <el-table-column
+      fixed
+      prop="theaterId.name"
+      label="放映厅"
+      width="150">
+    </el-table-column>
+    <el-table-column
+      fixed="right"
+      label="操作"
+      width="150">
+      <template slot-scope="scope">
+        <el-button @click="checkSeat(scope.row)" type="text" size="small">查看座位</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+   <el-table
+      :data="seatList"
+      style="width: 100%">
+      <el-table-column
+        prop="seatId.displayName"
+        label="座位"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="state"
+        :formatter="ifbuy"
+        label="状态"
+        width="180">
+      </el-table-column>
+      <el-table-column
+	      fixed="right"
+	      label="操作"
+	      width="150">
+	      <template slot-scope="scope">
+	        <el-button @click="buy(scope.row)" type="text"  size="small">购票</el-button>
+	      </template>
+      </el-table-column>
+     
+    </el-table>
  </div>
 </template>
 
@@ -88,6 +158,7 @@
         },
         showTime: '',
         price:'',
+        flag:false
       };
     },
     computed:{
@@ -98,7 +169,15 @@
     	studios(){
     		return this.$store.state.addscheduleStore.studios
     	},
-
+    	studiosByschedule(){
+    		return this.$store.state.addscheduleStore.studiosByschedule
+    	},
+    	theatersBystudio(){
+    		return this.$store.state.addscheduleStore.theatersBystudio
+    	},
+    	seatList(){
+    		return this.$store.state.addscheduleStore.seatList
+    	},
     	value1:{
 		 	get: function(){
 		      return this.$store.state.addscheduleStore.value1
@@ -123,6 +202,8 @@
 		      this.$store.state.addscheduleStore.value3=newValue
 		    }
     	},
+    	
+
     },
     created(){
  		console.log(this.$store.state.addscheduleStore.movies)
@@ -132,6 +213,7 @@
     methods:{
     	selectMovie(value){
     		this.$store.commit("selectMovie",value)
+    		this.getStudiosByMovieId()
     	},
     	selectStudio(value){
     		this.$store.commit("selectStudio",value)
@@ -142,16 +224,53 @@
     	setPrice(value){
     		console.log(value)
     	},
-    	con(value){
-    		let time = moment(value).format('MM/DD/YYYY HH:mm')
-    		console.log(time)
-    		// console.log(value)
+    	getStudiosByMovieId(){
+    		this.$store.dispatch("getStudiosByMovieIdAsync")
+    	},
+    	getTheaterByStudioId(data){
+    		this.$store.dispatch("getTheaterByStudioIdAsync",data)
     	},
     	addSchedule(){
     		console.log("in-addSchedule")
-    		let time = moment(this.value4).format('MM/DD/YYYY HH:mm')
+    		let time = moment(this.showTime).format('MM/DD/YYYY HH:mm')
     		this.$store.dispatch("addScheduleAsync",{showTime:time,price:this.price})
-    	}
+    		this.getStudiosByMovieId()
+    		// this.price=""
+    		// this.showTime=""
+    		// this.value1={}
+    		// this.value2={}
+    		// this.value3={}
+    	},
+    	delSchedulesInStudioByMovieId(row){
+    		console.log(row)
+    		let time = moment(this.showTime).format('MM/DD/YYYY HH:mm')
+    		this.$store.dispatch("delSchedulesInStudioByMovieIdAsync",{studioId:row._id,status:0,showTime:time})
+    	},
+ 		ifbuy(row, column, cellValue){
+ 			console.log(cellValue)
+ 			if(cellValue==0){
+ 				return "未售"
+ 			}else{
+ 				return "已售"
+ 			}
+ 		},
+    	handleClick(row) {
+        	console.log(row._id);
+        	let time = moment(this.showTime).format('MM/DD/YYYY HH:mm')
+        	console.log(time)
+        	this.getTheaterByStudioId({showTime:time,studioId:row._id})
+      	},
+      	checkSeat(row){
+      		console.log(row);
+      		this.$store.dispatch("getSeatingsByScheduleIdAsync",row._id)
+      	},
+      	buy(row){
+      		console.log(row.scheduleId);
+      		this.$store.dispatch("buyAsync",row._id)
+      		console.log(this.flag)
+      		this.flag = true
+      		this.$store.dispatch("getSeatingsByScheduleIdAsync",row.scheduleId)
+      	}
     }
   }
 </script>
