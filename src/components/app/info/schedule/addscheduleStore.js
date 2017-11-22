@@ -7,9 +7,9 @@ export default{
         movies: [],
         studios: [],
         theaters: [],
-        value1: {},
-        value2: {},
-        value3: {},
+        value1: '',
+        value2: '',
+        value3: '',
         price: '',
         studiosByschedule:[],
         theatersBystudio:[],
@@ -25,18 +25,22 @@ export default{
       Object.assign(state,data)
       // console.log(state.studios)
     },
+    getTheaters(state){
+      state.studios.some((item)=>{
+          if(item._id == state.value2){
+             state.theaters =  item.theaters  
+             return true   
+          }
+      })
+    },
     selectMovie(state,data){
       Vue.set(state,"value1",data)
-
-      // Object.assign(state.value1,data)
     },
     selectStudio(state,data){
-      // Object.assign(state.value2,data)
-        Vue.set(state,"value2",data)
+      Vue.set(state,"value2",data)
     },
     selectTheater(state,data){
-      // Object.assign(state.value3,data)
-        Vue.set(state,"value3",data)
+      Vue.set(state,"value3",data)
     },
     getStudiosByMovieId(state,data){
        Object.assign(state,data)
@@ -58,6 +62,7 @@ export default{
         const {data} = await axios.get("/movies/getMovies",{
           params:{curPage,eachPage}
         })
+        console.log (data.data)
         let result = {movies:data.data}
         context.commit("getMovies",result)
       },
@@ -70,9 +75,9 @@ export default{
         context.commit("getStudios",result)
       },
       async addScheduleAsync(context,{
-          movieId =context.state.value1["_id"],
-          studioId=context.state.value2["_id"],
-          theaterId=context.state.value3["_id"],
+          movieId =context.state.value1,
+          studioId=context.state.value2,
+          theaterId=context.state.value3,
           price,showTime
         }={}){
         const data = await axios.post("/schedules/addSchedule",{
@@ -81,15 +86,15 @@ export default{
         alert("成功")
       },
       async getStudiosByMovieIdAsync(context){
-        console.log(context.state.value1["_id"])
+        console.log(context.state.value1)
         const {data} = await axios.post("/schedules/getStudiosByMovieId",{
-          movieId:context.state.value1["_id"]
+          movieId:context.state.value1
         })
         let result = {studiosByschedule:data.rows}
         context.commit("getStudios",result)
       },
       async getTheaterByStudioIdAsync(context,{
-          movieId =context.state.value1["_id"],
+          movieId =context.state.value1,
           studioId,
           showTime,
         }={}){

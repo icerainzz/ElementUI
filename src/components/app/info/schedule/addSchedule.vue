@@ -1,35 +1,34 @@
 <template>
 <div class="addSchedule-wrap">
-  <el-select class="select-item" v-model="value1.cName" placeholder="电影"
+  <el-select class="select-item" v-model="value1" placeholder="电影"
   	@change="(value)=>{selectMovie(value)}"
   >
     <el-option
       v-for="(item,index) in movies"
       :key="item._id"
-      :value="item"
+      :value="item._id"
       :label="item.cName"
       >
     </el-option>
   </el-select>
-  <el-select class="select-item" v-model="value2.name" placeholder="影院"
-  	@change="(value)=>{selectStudio(value)}"
+  <el-select class="select-item" v-model="value2" placeholder="影院"
+  	
   >
     <el-option
       v-for="(item,index) in studios"
       :key="item._id"
-      :value="item"
+      :value="item._id"
       :label="item.name"
       >
     </el-option>
   </el-select>
-   <el-select class="select-item" v-model="value3.name" placeholder="影厅"
-    @change="(value)=>{selectTheater(value)}"
+   <el-select class="select-item" v-model="value3" placeholder="影厅"
    >
     <el-option
-      v-for="item in value2.theaters"
+      v-for="item in theaters"
       :key="item._id"
       :label="item.name"
-      :value="item">
+      :value="item._id">
     </el-option>
   </el-select>
   <div class="block">
@@ -42,29 +41,26 @@
     </el-date-picker>
   </div>
   <el-input class="price-input" v-model="price" placeholder="票价"
-  	@blur="setPrice(price)"
-
   ></el-input>
-  <div>
+  <div class="pandding-bottom" >
   	<el-button type="primary" icon="el-icon-upload"
   		@click="addSchedule"
   	>保存</el-button>
 	<el-button type="primary" icon="el-icon-refresh">重置</el-button>
   </div>
-   <el-table
+  <h3 class="list-title">影院列表</h3>
+  <el-table
     :data="studiosByschedule"
     border
-    style="width:100%">
+    style="width:800px">
     <el-table-column
-      fixed
       prop="name"
-      label="影院名"
-      width="150">
+      label="影院名">
     </el-table-column>
     <el-table-column
       prop="address"
       label="地址"
-      width="120">
+      >
     </el-table-column>
     <el-table-column
       fixed="right"
@@ -76,21 +72,20 @@
       </template>
     </el-table-column>
   </el-table>
+  <h3 class="list-title">放映厅</h3>
   <el-table
     :data="theatersBystudio"
     border
-    style="width:100%">
+    style="width:800px">
     <el-table-column
-      fixed
       prop="show_time"
       label="放映时间"
-      width="150">
+      >
     </el-table-column>
     <el-table-column
-      fixed
       prop="theaterId.name"
       label="放映厅"
-      width="150">
+      >
     </el-table-column>
     <el-table-column
       fixed="right"
@@ -101,19 +96,21 @@
       </template>
     </el-table-column>
   </el-table>
-   <el-table
+  <h3 class="list-title">座位列表</h3>
+  <el-table
       :data="seatList"
-      style="width: 100%">
+      border
+      style="width: 800px">
       <el-table-column
         prop="seatId.displayName"
         label="座位"
-        width="180">
+        >
       </el-table-column>
       <el-table-column
         prop="state"
         :formatter="ifbuy"
         label="状态"
-        width="180">
+       >
       </el-table-column>
       <el-table-column
 	      fixed="right"
@@ -123,12 +120,12 @@
 	        <el-button @click="buy(scope.row)" type="text"  size="small">购票</el-button>
 	      </template>
       </el-table-column>
-     
-    </el-table>
+  </el-table>
  </div>
 </template>
 
 <script>
+  import { mapState,mapActions } from "vuex"
   var moment = require('moment')
   export default {
   	name:"addSchedule",
@@ -158,17 +155,18 @@
         },
         showTime: '',
         price:'',
-        flag:false
       };
     },
     computed:{
     	movies(){
     		return this.$store.state.addscheduleStore.movies
     	},
-
     	studios(){
     		return this.$store.state.addscheduleStore.studios
     	},
+      theaters(){
+        return this.$store.state.addscheduleStore.theaters
+      },
     	studiosByschedule(){
     		return this.$store.state.addscheduleStore.studiosByschedule
     	},
@@ -179,32 +177,35 @@
     		return this.$store.state.addscheduleStore.seatList
     	},
     	value1:{
-		 	get: function(){
-		      return this.$store.state.addscheduleStore.value1
-		    },
-		    set: function(newValue) {
-		      this.$store.state.addscheduleStore.value1=newValue
-		    }
+    		 	get: function(){
+    		      return this.$store.state.addscheduleStore.value1
+    		    },
+    	    set: function(newValue) {
+            console.log (newValue) 
+            this.$store.commit("selectMovie",newValue)
+    	    }
     	},
     	value2:{
-		 	get: function(){
+		 	  get: function(){
 		      return this.$store.state.addscheduleStore.value2
 		    },
 		    set: function(newValue) {
-		      this.$store.state.addscheduleStore.value2=newValue
+          console.log (newValue) 
+          this.$store.commit("selectStudio",newValue)
+          this.$store.commit("getTheaters")
 		    }
     	},
     	value3:{
-		 	get: function(){
+		 	  get: function(){
 		      return this.$store.state.addscheduleStore.value3
 		    },
 		    set: function(newValue) {
-		      this.$store.state.addscheduleStore.value3=newValue
+          console.log (newValue) 
+          this.$store.commit("selectTheater",newValue)
 		    }
     	},
-    	
-
     },
+    // computed:mapState([movies,studios,studiosByschedule,theatersBystudio,seatList,])
     created(){
  		console.log(this.$store.state.addscheduleStore.movies)
     	this.$store.dispatch("getMoviesAsync")
@@ -212,17 +213,7 @@
     },
     methods:{
     	selectMovie(value){
-    		this.$store.commit("selectMovie",value)
     		this.getStudiosByMovieId()
-    	},
-    	selectStudio(value){
-    		this.$store.commit("selectStudio",value)
-    	},
-    	selectTheater(value){
-    		this.$store.commit("selectTheater",value)
-    	},
-    	setPrice(value){
-    		console.log(value)
     	},
     	getStudiosByMovieId(){
     		this.$store.dispatch("getStudiosByMovieIdAsync")
@@ -246,31 +237,31 @@
     		let time = moment(this.showTime).format('MM/DD/YYYY HH:mm')
     		this.$store.dispatch("delSchedulesInStudioByMovieIdAsync",{studioId:row._id,status:0,showTime:time})
     	},
- 		ifbuy(row, column, cellValue){
- 			console.log(cellValue)
- 			if(cellValue==0){
- 				return "未售"
- 			}else{
- 				return "已售"
- 			}
- 		},
+   		ifbuy(row, column, cellValue){
+   			console.log(cellValue)
+   			if(cellValue==0){
+   				return "未售"
+   			}else{
+   				return "已售"
+   			}
+   		},
     	handleClick(row) {
         	console.log(row._id);
         	let time = moment(this.showTime).format('MM/DD/YYYY HH:mm')
         	console.log(time)
         	this.getTheaterByStudioId({showTime:time,studioId:row._id})
-      	},
-      	checkSeat(row){
-      		console.log(row);
-      		this.$store.dispatch("getSeatingsByScheduleIdAsync",row._id)
-      	},
-      	buy(row){
-      		console.log(row.scheduleId);
-      		this.$store.dispatch("buyAsync",row._id)
-      		console.log(this.flag)
-      		this.flag = true
-      		this.$store.dispatch("getSeatingsByScheduleIdAsync",row.scheduleId)
-      	}
+      },
+    	checkSeat(row){
+    		console.log(row);
+    		this.$store.dispatch("getSeatingsByScheduleIdAsync",row._id)
+    	},
+    	buy(row){
+    		console.log(row.scheduleId);
+    		this.$store.dispatch("buyAsync",row._id)
+    		console.log(this.flag)
+    		this.flag = true
+    		this.$store.dispatch("getSeatingsByScheduleIdAsync",row.scheduleId)
+    	}
     }
   }
 </script>
@@ -295,4 +286,10 @@
 		width:250px;
 		padding-bottom: 35px;
 	}
+  .pandding-bottom{
+    padding-bottom: 35px;
+  }
+  .list-title{
+    color:#409EFF;
+  }
 </style>
