@@ -112,15 +112,15 @@
 			handleSizeChange(val) {
 	        	console.log(`每页 ${val} 条`);
 	        	this.getNewssAsync({
-	        		curPage: 1,
-	        		eachPage: val,
+	        		page: 1,
+	        		rows: val,
 	       	 	})
 	      	},
 	      	handleCurrentChange(val) {
 	        	console.log(`当前页: ${val}`);
 	        	this.getNewssAsync({
-	        		curPage: val,
-	        		eachPage: this.eachPage
+	        		page: val,
+	        		rows: this.eachPage
 	        	})
 	      	},			
 				// 提取数据渲染到列表		

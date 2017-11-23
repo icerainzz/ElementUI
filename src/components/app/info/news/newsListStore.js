@@ -28,11 +28,11 @@ export default {
 	},
 	actions: {
 		// 查询news数据并渲染
-		async getNewssAsync(context, {curPage = this.state.newsListStore.curPage, eachPage = this.state.newsListStore.eachPage} = {}) {
+		async getNewssAsync(context, {page = this.state.newsListStore.curPage, rows = this.state.newsListStore.eachPage} = {}) {
 			const {data} = await axios.get("/news/getNewss", {
 				params: {
-					curPage,
-					eachPage
+					page,
+					rows
 				}
 			})
 			context.commit("getNewss", data)
