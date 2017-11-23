@@ -117,7 +117,7 @@
 	      label="操作"
 	      width="150">
 	      <template slot-scope="scope">
-	        <el-button @click="buy(scope.row)" type="text"  size="small">购票</el-button>
+	        <el-button @click="buy(scope.row)" type="text" :disabled="~~scope.row.state"  size="small">购票</el-button>
 	      </template>
       </el-table-column>
   </el-table>
@@ -256,11 +256,11 @@
     		this.$store.dispatch("getSeatingsByScheduleIdAsync",row._id)
     	},
     	buy(row){
-    		console.log(row.scheduleId);
+    		console.log(row.state);
     		this.$store.dispatch("buyAsync",row._id)
     		console.log(this.flag)
-    		this.flag = true
     		this.$store.dispatch("getSeatingsByScheduleIdAsync",row.scheduleId)
+    		console.log(row.state);
     	}
     }
   }

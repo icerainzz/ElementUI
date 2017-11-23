@@ -26,6 +26,8 @@ import addUser from "../components/app/info/user/addUser.vue"
 import userList from "../components/app/info/user/userList.vue"
 
 
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -46,7 +48,8 @@ export default new Router({
     name: 'info',
     component: Info,
     children: [{
-      path: 'addImage',
+      path: 'addImage/:movieId',
+      name:"addImage",
       component: addImage
     }, {
       path: 'imageList',

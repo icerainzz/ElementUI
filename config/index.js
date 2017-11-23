@@ -38,19 +38,25 @@ module.exports = {
       },
       "/schedules/**": {
         //家里的
-        target: "http://192.168.1.106:3000",
+        target: "http://127.0.0.1:3000",
         secure: false,
         changeOrigin: true
       },
       "/movies/**": {
         //家里的
-        target: "http://192.168.1.106:3000",
+        target: "http://127.0.0.1:3000",
         secure: false,
         changeOrigin: true
       },
        "/studios/**": {
         //家里的
-        target: "http://192.168.1.106:3000",
+        target: "http://127.0.0.1:3000",
+        secure: false,
+        changeOrigin: true
+      },
+      "/imgs/**": {
+        //家里的
+        target: "http://127.0.0.1:3000",
         secure: false,
         changeOrigin: true
       },
